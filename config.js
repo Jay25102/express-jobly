@@ -16,6 +16,7 @@ const PORT = +process.env.PORT || 3001;
 //       : process.env.DATABASE_URL || "postgresql:///jobly";
 // }
 
+// removed postgresql:/// in front of db name so that it works with Express 4.17.1
 function getDatabaseUri() {
   return (process.env.NODE_ENV === "test")
       ? "jobly_test"
