@@ -85,6 +85,92 @@ describe("findAll", function () {
       },
     ]);
   });
+
+  test("filter by minEmployees", async function() {
+    let companies = await Company.findAll({minEmployees: 2});
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      },
+    ]);
+  });
+
+  test("filter by maxEmployees", async function() {
+    let companies = await Company.findAll({maxEmployees: 2});
+    expect(companies).toEqual([
+      {
+        handle: "c1",
+        name: "C1",
+        description: "Desc1",
+        numEmployees: 1,
+        logoUrl: "http://c1.img",
+      },
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
+
+  test("filter by min and max", async function() {
+    let companies = await Company.findAll({minEmployees: 2, maxEmployees: 3});
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+      {
+        handle: "c3",
+        name: "C3",
+        description: "Desc3",
+        numEmployees: 3,
+        logoUrl: "http://c3.img",
+      },
+    ]);
+  });
+
+  test("filter by name", async function() {
+    let companies = await Company.findAll({name: "2"});
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
+
+  test("all filters", async function() {
+    let companies = await Company.findAll({name: "2", minEmployees: 1, maxEmployees: 3});
+    expect(companies).toEqual([
+      {
+        handle: "c2",
+        name: "C2",
+        description: "Desc2",
+        numEmployees: 2,
+        logoUrl: "http://c2.img",
+      },
+    ]);
+  });
 });
 
 /************************************** get */

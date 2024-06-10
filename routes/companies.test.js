@@ -106,6 +106,28 @@ describe("GET /companies", function () {
         .set("authorization", `Bearer ${u1Token}`);
     expect(resp.statusCode).toEqual(500);
   });
+
+  test("search filters", async function() {
+    const response = await request(app)
+    .get("/companies")
+    .query({
+      name: "3",
+      minEmployees: 2,
+      maxEmployees: 3
+    });
+
+    expect(response.body).toEqual({
+      companies: [
+        {
+          handle: "c3",
+          name: "C3",
+          description: "Desc3",
+          numEmployees: 3,
+          logoUrl: "http://c3.img",
+        },
+      ],
+    });
+  });
 });
 
 /************************************** GET /companies/:handle */
