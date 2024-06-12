@@ -247,4 +247,22 @@ describe("applyToJob", function() {
       },
     ]);
   });
+
+  test("not found if no such user", async function() {
+    try {
+      await User.applyToJob("nope", testJobIds[0]);
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
+  test("not found if no such job", async function() {
+    try {
+      await User.applyToJob("u1", -1);
+      fail();
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
 });
