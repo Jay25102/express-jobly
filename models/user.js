@@ -204,6 +204,18 @@ class User {
 
     if (!user) throw new NotFoundError(`No user: ${username}`);
   }
+
+  /** Apply for job
+   * 
+   * Updates db and returns undefined
+   * 
+   * - username: username applying for job
+   * - jobId: id of job in db
+   */
+  
+  static async applyToJob(username, jobId) {
+    
+  }
 }
 
 
