@@ -77,28 +77,124 @@ describe("findAll", function() {
         let jobs = await Job.findAll();
         expect(jobs).toEqual([
             {
+                id: testJobIds[0],
                 title: "Job1",
                 salary: 100,
                 equity: "0.1",
-                company_handle: "c1"
+                company_handle: "c1",
+                companyName: "C1",
             },
             {
+                id: testJobIds[1],
                 title: "Job2",
                 salary: 200,
                 equity: "0.2",
-                company_handle: "c1"
+                company_handle: "c1",
+                companyName: "C1",
             },
             {
+                id: testJobIds[2],
                 title: "Job3",
                 salary: 300,
                 equity: "0.3",
-                company_handle: "c1"
+                company_handle: "c1",
+                companyName: "C1",
             },
             {
+                id: testJobIds[3],
                 title: "Job4",
                 salary: 400,
-                equity: "0.4",
-                company_handle: "c1"
+                equity: null,
+                company_handle: "c1",
+                companyName: "C1",
+            },
+        ]);
+    });
+
+    test("works: filter by title", async function() {
+        let job = await Job.findAll({ title: "1" });
+        expect(job).toEqual([
+            {
+                id: testJobIds[0],
+                title: "Job1",
+                salary: 100,
+                equity: "0.1",
+                company_handle: "c1",
+                companyName: "C1",
+            },
+        ]);
+    });
+
+    test("filter by minSalary", async function() {
+        let job = await Job.findAll({minSalary: 300});
+        expect(job).toEqual([
+            {
+                id: testJobIds[2],
+                title: "Job3",
+                salary: 300,
+                equity: "0.3",
+                company_handle: "c1",
+                companyName: "C1",
+            },
+            {
+                id: testJobIds[3],
+                title: "Job4",
+                salary: 400,
+                equity: null,
+                company_handle: "c1",
+                companyName: "C1",
+            },
+        ]);
+    });
+
+    test("filter by hasEquity true", async function() {
+        let job = await Job.findAll({hasEquity: true});
+        expect(job).toEqual([
+            {
+                id: testJobIds[0],
+                title: "Job1",
+                salary: 100,
+                equity: "0.1",
+                company_handle: "c1",
+                companyName: "C1",
+            },
+            {
+                id: testJobIds[1],
+                title: "Job2",
+                salary: 200,
+                equity: "0.2",
+                company_handle: "c1",
+                companyName: "C1",
+            },
+            {
+                id: testJobIds[2],
+                title: "Job3",
+                salary: 300,
+                equity: "0.3",
+                company_handle: "c1",
+                companyName: "C1",
+            },
+        ]);
+    });
+
+    test("all filters", async function() {
+        let job = await Job.findAll({ title: "Job", minSalary: 200, hasEquity: true});
+        expect(job).toEqual([
+            {
+                id: testJobIds[1],
+                title: "Job2",
+                salary: 200,
+                equity: "0.2",
+                company_handle: "c1",
+                companyName: "C1",
+            },
+            {
+                id: testJobIds[2],
+                title: "Job3",
+                salary: 300,
+                equity: "0.3",
+                company_handle: "c1",
+                companyName: "C1",
             },
         ]);
     });

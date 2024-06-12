@@ -49,13 +49,56 @@ class Job {
 
     /** Find all jobs.
      * 
-     * Returns [{ title, salary, equity, company_handle}, ...]
+     * searchFilters (all optional):
+     * - title (case-insensitive title search)
+     * - minSalary
+     * - hasEquity(only returns jobs with non-zero equity if true)
+     * 
+     * Returns [{ id, title, salary, equity, company_handle, companyName}, ...]
      */
-    static async findAll() {
-        let query = `SELECT title, salary, equity, company_handle
-                    FROM jobs`;
+    static async findAll(searchFilters = {}) {
+        let query = `SELECT j.id, 
+                            j.title, 
+                            j.salary, 
+                            j.equity, 
+                            j.company_handle,
+                            c.name AS "companyName"
+                    FROM jobs j
+                    LEFT JOIN companies AS c ON c.handle = j.company_handle`;
+        // create arrays to store parts of the query string depending on
+        // how many filters the user wants
+        let queryValues = [];
+        let whereExpressions = [];
 
-        const jobsRes = await db.query(query);
+        const { title, minSalary, hasEquity } = searchFilters;
+
+        // if user filters by title, add query to search by
+        // title case-insensitive
+        if (title !== undefined) {
+            queryValues.push(`%${title}%`);
+            whereExpressions.push(`title ILIKE $${queryValues.length}`);
+        }
+
+        // add salary to query where salary must be greater or equal
+        // to the amount specified
+        if (minSalary !== undefined) {
+            queryValues.push(minSalary);
+            whereExpressions.push(`salary >= $${queryValues.length}`);
+        }
+
+        // filters by equity greater than 0
+        if (hasEquity === true) {
+            whereExpressions.push(`equity > 0`);
+        }
+
+        // join all the filter expressions together
+        if (whereExpressions.length > 0) {
+            query += " WHERE " + whereExpressions.join(" AND ");
+        }
+
+        // finalize and query
+        query += " ORDER BY title";
+        const jobsRes = await db.query(query, queryValues);
         return jobsRes.rows;
     }
 
