@@ -118,5 +118,15 @@ router.delete("/:username", ensureSpecificUserOrAdmin, async function (req, res,
   }
 });
 
+/** POST /[username]/jobs/[id] => { applied: jobId } */
+
+router.post("/:username/jobs/:id", ensureSpecificUserOrAdmin, async function (req, res, next) {
+  try {
+    await User.applyToJob(req.params.user, req.params.id);
+    return res.json({ applied: req.params.id })
+  } catch (err) {
+    return next(err);
+  }
+});
 
 module.exports = router;
