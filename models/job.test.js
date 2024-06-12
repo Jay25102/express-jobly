@@ -19,7 +19,7 @@ afterAll(commonAfterAll);
 /************************************** create */
 
 describe("create", function() {
-    const newJob = {
+    let newJob = {
         title: "new job at c1",
         salary: 5000,
         equity: "0",
@@ -28,7 +28,7 @@ describe("create", function() {
 
     test("works", async function() {
         let job = await Job.create(newJob);
-        expect(job).toEqual(newJob);
+        expect(job).toEqual({id: expect.any(Number), ...newJob});
 
         const result = await db.query(`
            SELECT title, salary, equity, company_handle
